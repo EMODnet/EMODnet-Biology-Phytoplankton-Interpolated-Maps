@@ -1,0 +1,6 @@
+[deps]
+DIVAnd = "efc8151c-67de-5a8f-9a35-d8f54746ae9d"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Proj4 = "9a7e659c-8ee8-5706-894e-f68f43bc57ea"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
