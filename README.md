@@ -1,6 +1,6 @@
-# {{project_name}}
+# EMODnet-Biology-Phytoplankton-Interpolation
 
-{{project_description}}
+This directory provides the code for the reading of data files and interpolation using `DIVAnd` software tool.
 
 ## Directory structure
 
