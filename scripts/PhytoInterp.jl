@@ -2,6 +2,7 @@ using PyPlot
 using Proj4
 using DIVAnd
 using NCDatasets
+using GridInterpolations
 
 """
     read_data_phyto(datafile)
@@ -92,6 +93,28 @@ function transform_coords(lon::Vector, lat::Vector)
     end
 
     return lonp, latp
+end
+
+"""
+    reinterp_field(longrid, latgrid, field, lonobs, latobs)
+
+Re-interpolate the field defined by `longrid`, `latgrid` and `field` onto the
+positions defined by `lonobs`, `latobs`
+
+"""
+function reinterp_field(longrid, latgrid, field::Array, lonobs::Vector, latobs::Vector)
+    grid = RectangleGrid(longrid, latgrid);
+    gridData = field[:];
+
+    # Allocate
+    fieldinterp = Vector{Float64}(undef, length(lonobs))
+    i = 1
+    for (loninterp, latinterp) in zip(lonobs, latobs)
+        print(loninterp, latinterp)
+        fieldinterp[i] = GridInterpolations.interpolate(grid, gridData, [loninterp, latinterp])
+        i += 1
+    end
+    return fieldinterp::Vector
 end
 
 
