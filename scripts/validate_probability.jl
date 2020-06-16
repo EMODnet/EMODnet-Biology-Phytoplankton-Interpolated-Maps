@@ -1,5 +1,12 @@
 using Interpolations
 
+"""
+    interpcv(xyi,value_analysis,xy)
+
+Interpolate the array `value_analysis` defined on the grid `xyi` which is a tuple
+of vectors to the location of the the cross-validation points `xy`
+(also a tuple of vectors).
+"""
 function interpcv(xyi,value_analysis,xy)
     ncv = length(xy[1])
     value_analysis_cv = zeros(ncv)
