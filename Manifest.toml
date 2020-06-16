@@ -140,6 +140,12 @@ git-tree-sha1 = "4df9f7e06108728ebf00a0a11edee4b29a482bb2"
 uuid = "c27321d9-0574-5035-807b-f59d2c89b15c"
 version = "1.3.0"
 
+[[GridInterpolations]]
+deps = ["LinearAlgebra", "Printf", "StaticArrays"]
+git-tree-sha1 = "1220f4c636051ca9de17d2ad971a807adcc2267c"
+uuid = "bb4c363b-b914-514b-8517-4eb369bc008a"
+version = "1.1.1"
+
 [[HTTP]]
 deps = ["Base64", "Dates", "IniFile", "MbedTLS", "Sockets"]
 git-tree-sha1 = "ec87d5e2acbe1693789efbbe14f5ea7525758f71"
