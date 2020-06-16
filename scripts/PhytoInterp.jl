@@ -48,6 +48,23 @@ function get_species_name(datafile::String)::String
 end
 
 """
+    get_species_slug(filename)
+
+Return the a species 'slug' based on the data file name
+
+## Examples
+```julia-repl
+julia> slug = get_species_slug("Plagiogramma brockmanni var. brockmanni-1995-2020.csv")
+"Plagiogramma_brockmanni_var_brockmanni"
+```
+"""
+function get_species_slug(filename::String)::String
+    speciesname = get_species_name(filename)
+    speciesslug = replace(replace(speciesname, " " => "_"), "." => "")
+    return speciesslug
+end
+
+"""
     transform_coords(lon, lat)
 
 Transform the initial coordinates (`lon`, `lat`), in 'UTM zone 31N', into WGS84.
@@ -143,3 +160,41 @@ function create_nc_results(filename::String, lons, lats, field,
 
     end
 end;
+
+
+"""
+    plot_heatmap(longrid, latgrid, dens, lonobs, latobs, occurs, titletext, figname)
+
+Plot the heatmap `dens` (computed by `DIVAnd`) on the grid defined by `longrid`, `latgrid`
+and add the locations of the observations defined by `lonobs`, `latobs` and `occurs`.
+
+The vector `occurs` (0's and 1's) is used to separate 'presence' and 'absence' data points.
+
+## Examples
+```julia-repl
+julia> plot_heatmap(longrid, latgrid, dens, lonobs, latobs, occurs,
+    "Actinocyclus", "Actinocyclus_data.png")
+```
+"""
+function plot_heatmap(longrid::StepRangeLen, latgrid::StepRangeLen,
+    dens::Array, lonobs::Vector, latobs::Vector, occurs::Vector,
+    titletext::String, figname::String="")
+
+    data_presence = occurs .== 1;
+    data_absence = occurs .== 0;
+
+    llon, llat = ndgrid(longrid, latgrid)
+    fig = PyPlot.figure(figsize=(12,8))
+    ax = PyPlot.subplot(111)
+    ax.plot(lonobs[data_presence], latobs[data_presence], "wo", markersize=1., zorder=3)
+    ax.plot(lonobs[data_absence], latobs[data_absence], "ko", markersize=1., zorder=3)
+    pcm = ax.pcolor(llon, llat, dens, cmap=PyPlot.cm.hot_r, zorder=2)
+    colorbar(pcm, orientation="horizontal"  )
+    title(titletext)
+    if length(figname) > 0
+        PyPlot.savefig(figname, dpi=300, bbox_inches="tight")
+        PyPlot.close()
+    else
+        PyPlot.show()
+    end
+end
