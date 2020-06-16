@@ -13,8 +13,8 @@ function interpcv(xyi,value_analysis,xy)
 
     xyi = map(x -> collect(x),xyi);
 
-    tmp_itp = interpolate(xyi, value_analysis, Gridded(Linear()))
-    itp = extrapolate(tmp_itp,Line())
+    tmp_itp = Interpolations.interpolate(xyi, value_analysis, Gridded(Linear()))
+    itp = Interpolations.extrapolate(tmp_itp,Line())
 
     #save("tmp.jld2","xyi",xyi,"value_analysis",value_analysis,"xy",xy)
     xyi = zeros(length(xy))

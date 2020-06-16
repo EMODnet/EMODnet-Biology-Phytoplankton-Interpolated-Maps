@@ -110,7 +110,6 @@ function reinterp_field(longrid, latgrid, field::Array, lonobs::Vector, latobs::
     fieldinterp = Vector{Float64}(undef, length(lonobs))
     i = 1
     for (loninterp, latinterp) in zip(lonobs, latobs)
-        print(loninterp, latinterp)
         fieldinterp[i] = GridInterpolations.interpolate(grid, gridData, [loninterp, latinterp])
         i += 1
     end
