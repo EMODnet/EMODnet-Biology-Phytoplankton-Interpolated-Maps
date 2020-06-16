@@ -139,6 +139,3 @@ function create_nc_results(filename::String, lons, lats, field,
 
     end
 end;
-
-# End of module
-end
