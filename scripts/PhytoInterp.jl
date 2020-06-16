@@ -108,7 +108,11 @@ julia> create_nc_results("Bacteriastrum_interp.nc", lons, lats, field,
 ```
 """
 function create_nc_results(filename::String, lons, lats, field,
-    speciesname::String=""; valex=-999.9)
+                           speciesname::String="";
+                           valex=-999.9,
+                           varname = "heatmap",
+                           long_name = "Heatmap",
+                           )
     Dataset(filename, "c") do ds
 
         # Dimensions
@@ -117,10 +121,10 @@ function create_nc_results(filename::String, lons, lats, field,
         #ds.dim["time"] = Inf # unlimited dimension
 
         # Declare variables
-        ncfield = defVar(ds,"heatmap", Float64, ("lon", "lat"))
+        ncfield = defVar(ds,varname, Float64, ("lon", "lat"))
         ncfield.attrib["missing_value"] = Float64(valex)
         ncfield.attrib["_FillValue"] = Float64(valex)
-        ncfield.attrib["long_name"] = "Heatmap"
+        ncfield.attrib["long_name"] = long_name
 
         """
         nctime = defVar(ds,"time", Float32, ("time",))
@@ -143,7 +147,7 @@ function create_nc_results(filename::String, lons, lats, field,
 
         # Global attributes
         ds.attrib["institution"] = "GHER - University of Liege"
-        ds.attrib["title"] = "Heatmap based on abundance of $(speciesname)"
+        ds.attrib["title"] = "$(long_name) based on abundance of $(speciesname)"
         ds.attrib["comment"] = "Original data prepared by Deltares"
         ds.attrib["data authors"] = "Luuk van der Heijden (Luuk.vanderHeijden@deltares.nl), Willem Stolte (Willem.Stolte@deltares.nl)"
         ds.attrib["processing authors"] = "C. Troupin (ctroupin@uliege), A. Barth (a.barth@uliege.be)"

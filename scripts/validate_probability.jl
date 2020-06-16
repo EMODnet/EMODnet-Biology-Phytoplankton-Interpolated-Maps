@@ -1,5 +1,12 @@
 using Interpolations
 
+"""
+    interpcv(xyi,value_analysis,xy)
+
+Interpolate the array `value_analysis` defined on the grid `xyi` which is a tuple
+of vectors to the location of the the cross-validation points `xy`
+(also a tuple of vectors).
+"""
 function interpcv(xyi,value_analysis,xy)
     ncv = length(xy[1])
     value_analysis_cv = zeros(ncv)
@@ -24,15 +31,13 @@ function interpcv(xyi,value_analysis,xy)
 end
 
 """
-    validate_probability(xyi,analysis_probability,xy_cv,occurs_cv )
+    validate_probability(xyi,analysis_probability,xy_cv,occurs_cv)
 
-`xyi` is a tuple with the initial grid (gridlon,gridlat)
-`analysis_probability` is the gridded probability of occurance
-`xy_cv` is a tuple with the cross-validation points (obslon,obslat)
-`occurs_cv` a vector of 0 (absence) and 1 (presence)
-
-The function returns the  log-likelihood for a probabilistic model for binary classification.
-
+The function returns the  log-likelihood for a probabilistic model for binary
+classification. `xyi` is a tuple with the analysis grid (e.g. `gridlon`,
+`gridlat`), `analysis_probability` is the gridded probability of occurance
+`xy_cv` is a tuple with the cross-validation points `(obslon,obslat)` and
+`occurs_cv` a vector of zeros (absence) and ones (presence).
 """
 function validate_probability(xyi,analysis_probability,xy_cv,occurs_cv )
     if isempty(occurs_cv)
