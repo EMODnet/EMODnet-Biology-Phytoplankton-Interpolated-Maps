@@ -15,6 +15,30 @@ lon_formatter = cartopyticker.LongitudeFormatter()
 lat_formatter = cartopyticker.LatitudeFormatter()
 
 """
+    plot_bathymetry(bx, by, b, figname)
+
+Plot the bathymetry and save it as `figname`.
+
+## Examples
+```julia-repl
+julia> plot_bathymetry(bx, by, b, "northsea_bathymetry.png")
+```
+"""
+function plot_bathymetry(bx, by, b, figname="")
+    fig = PyPlot.figure()
+    ax = PyPlot.subplot(111, projection=myproj)
+    pcolor(bx,by,b', vmin=0.);
+    colorbar(orientation="horizontal")
+    title("Depth")
+    decorate_map(ax)
+    if length(figname) > 0
+        PyPlot.savefig(figname, dpi=300, bbox_inches="tight")
+    end
+    PyPlot.show()
+    PyPlot.close()
+end
+
+"""
     make_plot_presence_absence(lon, lat, figname)
 
 Plot the locations of absence and presence in 2 subplots and save it as `figname`.
@@ -24,7 +48,7 @@ Plot the locations of absence and presence in 2 subplots and save it as `figname
 julia> make_plot_presence_absence(lon, lat, "data_locations.png")
 ```
 """
-function make_plot_presence_absence(lon::Vector, lat::Vector, figname::String="")
+function make_plot_presence_absence(lon::Vector, lat::Vector, occurs, figname::String="")
     data_presence = occurs .== 1;
     data_absence = .!(data_presence);
 
