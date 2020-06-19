@@ -200,7 +200,7 @@ julia> plot_heatmap(longrid, latgrid, dens, lonobs, latobs, occurs,
 """
 function plot_heatmap(longrid::StepRangeLen, latgrid::StepRangeLen,
     dens::Array, lonobs::Vector, latobs::Vector, occurs::Vector,
-    titletext::String, figname::String="")
+    titletext::String, figname::String="", vmin=0., vmax=1.)
 
     data_presence = occurs .== 1;
     data_absence = occurs .== 0;
@@ -210,7 +210,7 @@ function plot_heatmap(longrid::StepRangeLen, latgrid::StepRangeLen,
     ax = PyPlot.subplot(111)
     ax.plot(lonobs[data_presence], latobs[data_presence], "wo", markersize=1., zorder=3)
     ax.plot(lonobs[data_absence], latobs[data_absence], "ko", markersize=1., zorder=3)
-    pcm = ax.pcolor(llon, llat, dens, cmap=PyPlot.cm.hot_r, zorder=2)
+    pcm = ax.pcolor(llon, llat, dens, cmap=PyPlot.cm.hot_r, zorder=2, vmin=vmin, vmax=vmax)
     colorbar(pcm, orientation="horizontal"  )
     title(titletext)
     if length(figname) > 0
