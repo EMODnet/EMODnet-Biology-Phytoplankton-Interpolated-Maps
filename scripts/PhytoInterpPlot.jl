@@ -14,6 +14,7 @@ cartopyticker = pyimport("cartopy.mpl.ticker")
 lon_formatter = cartopyticker.LongitudeFormatter()
 lat_formatter = cartopyticker.LatitudeFormatter()
 
+
 """
     plot_bathymetry(bx, by, b, figname)
 
@@ -37,6 +38,31 @@ function plot_bathymetry(bx, by, b, figname="")
     PyPlot.show()
     PyPlot.close()
 end
+
+"""
+    plot_mask(bx, by, mask, figname)
+
+Plot the bathymetry and save it as `figname`.
+
+## Examples
+```julia-repl
+julia> plot_mask(bx, by, mask, "northsea_mask.png")
+```
+"""
+function plot_mask(bx, by, mask, figname="")
+    fig = PyPlot.figure()
+    ax = PyPlot.subplot(111, projection=myproj)
+    pcolor(bx, by, mask', cmap=PyPlot.cm.binary_r);
+    title("Land-sea mask")
+    decorate_map(ax, false)
+    if length(figname) > 0
+        PyPlot.savefig(figname, dpi=300, bbox_inches="tight")
+    end
+    PyPlot.show()
+    PyPlot.close()
+end
+
+
 
 """
     make_plot_presence_absence(lon, lat, figname)
@@ -79,11 +105,12 @@ Decorate the map by adding ticks and coastline.
 julia> decorate_map(ax)
 ```
 """
-function decorate_map(ax)
+function decorate_map(ax, plotcoast=true)
     PyPlot.grid(linewidth=0.2)
-    ax.add_feature(coast, color=".6",
-        edgecolor="k", zorder=5)
-
+    if plotcoast
+        ax.add_feature(coast, color=".6",
+            edgecolor="k", zorder=5)
+    end
     ax.set_xlim(-2., 9.)
     ax.set_ylim(51., 56)
     ax.set_xticks(-2:2.:9.)
@@ -109,7 +136,7 @@ julia> plot_heatmap(longrid, latgrid, dens, lonobs, latobs, occurs,
 """
 function plot_heatmap(longrid::StepRangeLen, latgrid::StepRangeLen,
     dens::Array, lonobs::Vector, latobs::Vector, occurs::Vector,
-    titletext::String, figname::String="")
+    titletext::String, figname::String="", vmin=0., vmax=maximum(dens))
 
     data_presence = occurs .== 1;
     data_absence = occurs .== 0;
@@ -120,7 +147,27 @@ function plot_heatmap(longrid::StepRangeLen, latgrid::StepRangeLen,
     ax = PyPlot.subplot(111, projection=myproj)
     ax.plot(lonobs[data_presence], latobs[data_presence], "wo", markersize=1., zorder=3)
     ax.plot(lonobs[data_absence], latobs[data_absence], "ko", markersize=1., zorder=3)
-    pcm = ax.pcolor(llon, llat, dens, cmap=PyPlot.cm.hot_r, zorder=2)
+    pcm = ax.pcolor(llon, llat, dens, cmap=PyPlot.cm.hot_r, zorder=2, vmin=vmin, vmax=vmax)
+    colorbar(pcm, orientation="horizontal"  )
+    decorate_map(ax)
+    title(titletext)
+    if length(figname) > 0
+        PyPlot.savefig(figname, dpi=300, bbox_inches="tight")
+        PyPlot.close()
+    else
+        PyPlot.show()
+    end
+end
+
+
+function plot_error(longrid::StepRangeLen, latgrid::StepRangeLen,
+    error::Array, titletext::String="", figname::String="")
+
+    llon, llat = ndgrid(longrid, latgrid)
+    myproj = ccrs.PlateCarree()
+    fig = PyPlot.figure(figsize=(12,8))
+    ax = PyPlot.subplot(111, projection=myproj)
+    pcm = ax.pcolor(llon, llat, error, zorder=2, cmap=PyPlot.cm.RdYlGn_r)
     colorbar(pcm, orientation="horizontal"  )
     decorate_map(ax)
     title(titletext)
