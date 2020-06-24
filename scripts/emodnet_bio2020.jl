@@ -1,9 +1,8 @@
-#using PyPlot
 using CSV
 using DataFrames
 using Dates
 using DelimitedFiles
-import DIVAnd
+using DIVAnd
 using FileIO
 using Glob
 using Interpolations
