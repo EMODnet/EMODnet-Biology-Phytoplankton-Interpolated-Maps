@@ -1,2 +1,2 @@
-julia -e 'using Pkg; add"https://github.com/gher-ulg/DIVAndNN.jl"'
-julia -e 'using Pkg; add"https://github.com/gher-ulg/OceanPlot.jl"'
+julia -e 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAndNN.jl"'
+julia -e 'using Pkg; pkg"add https://github.com/gher-ulg/OceanPlot.jl"'
