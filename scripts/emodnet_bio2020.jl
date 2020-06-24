@@ -217,8 +217,8 @@ len = 75e3
 #len = 30e3
 #len = 20e3
 
-#for len = [50e3, 75e3, 100e3, 125e3]
-#    for epsilon2ap = [1, 5, 10, 50, 100]
+for len = [50e3, 75e3, 100e3, 125e3]
+    for epsilon2ap = [1, 5, 10, 50, 100]
 
         outdir = joinpath(datadir,"Results","emodnet-bio-2020-ncovars$(length(covars_fname))-epsilon2ap$(epsilon2ap)-len$(len)-niter$(niter)-nlayers$(length(NLayers))")
         mkpath(outdir)
@@ -230,17 +230,17 @@ len = 75e3
 
             sname = String(scientificname_accepted[nameindex])
             #sname = "Lithodesmium undulatum"
-#sname = "Asterionella kariana"
-#sname = "Chaetoceros decipiens"
+            #sname = "Asterionella kariana"
+            #sname = "Chaetoceros decipiens"
             global loss_iter
             global val_iter
             @info sname
 
             paramname = joinpath(outdir,"DIVAndNN_$(sname)_interp.json")
 
-            #if isfile(paramname)
-            #    continue
-            #end
+            if isfile(paramname)
+                continue
+            end
 
             lon_a,lat_a,obstime_a,value_a,ids_a = loadbyname(data_analysis,years,sname)
             lon_cv,lat_cv,obstime_cv,value_cv,ids_cv = loadbyname(data_validation,years,sname)
@@ -347,5 +347,5 @@ len = 75e3
             ))
         end
 
-#    end
-#end
+    end
+end
