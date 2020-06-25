@@ -85,15 +85,14 @@ function plotanalysis(fname)
     #scatter(lon_a,lat_a,10,value_a,cmap = cmap)
     obsplot(mv_a,"(b) Data used in the analysis",cl_prop)
 
-    @show mean(value_analysis[isfinite.(value_analysis)])
-    @show mean(value_a)
-    @show mean(value_cv)
+    #@show mean(value_analysis[isfinite.(value_analysis)])
+    #@show mean(value_a)
+    #@show mean(value_cv)
 
     subplot(2,2,3);
     obsplot(mv_cv,"(c) Validation data",cl_prop)
 
-    figname = replace(fname,".nc" => "2.png")
-    @show figname
+    figname = replace(fname,".nc" => ".png")
     savefig(figname)
 end
 
