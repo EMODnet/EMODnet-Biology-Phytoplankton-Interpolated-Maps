@@ -67,87 +67,13 @@ covars_fname = [
     ("silicate.nc",      "silicate",identity),
 ]
 #covars_fname = []
+covars_fname = map(entry -> (joinpath(datadir,entry[1]),entry[2:end]...),covars_fname)
 
-ncovars = length(covars_fname)
+field = DIVAndNN.loadcovar((gridlon,gridlat),covars_fname;
+                           covars_coord = covars_coord,
+                           covars_const = covars_const)
 
-if covars_const
-    ncovars = ncovars + 1
-end
-
-if covars_coord
-    ncovars = ncovars + ndimensions
-end
-
-sz = (length(gridlon),length(gridlat),ncovars)
-
-field = zeros(sz)
-
-for i = 1:length(covars_fname)
-    (fname,varname,trans) = covars_fname[i]
-
-    Dataset(joinpath(datadir,fname)) do ds
-        tmp = nomissing(ds[varname][:],NaN)
-        tmp = trans.(tmp)
-        if ndimensions == 3
-            if ndims(tmp) == 2
-                field[:,:,:,i] = repeat(tmp,inner = (1,1,length(years)))
-            else
-                field[:,:,:,i] = tmp
-            end
-        else
-            field[:,:,i] = tmp
-        end
-    end
-end
-
-
-X,Y = DIVAnd.ndgrid(gridlon,gridlat)
-
-if covars_const
-    i = length(covars_fname)+1
-    @info "add const covariable"
-
-    if ndimensions == 3
-        field[:,:,:,i] .= 1
-    else
-        field[:,:,i] .= 1
-    end
-end
-
-if covars_coord
-    if ndimensions == 3
-        @info "add lon/lat/time as covariable"
-        field[:,:,:,end-2] = repeat(X,inner = (1,1,length(years)))
-        field[:,:,:,end-1] = repeat(Y,inner = (1,1,length(years)))
-        field[:,:,:,end]   = repeat(reshape(years,(1,1,length(years))),inner = (length(gridlon),length(gridlat),1))
-    else
-        @info "add lon/lat as covariable"
-        field[:,:,end-1] = X
-        field[:,:,end] = Y
-    end
-end
-
-@show size(field)
-function std_or_1(tmp)
-    s = std(tmp)
-    if s == 0
-        return one(s)
-    else
-        return s
-    end
-end
-
-# normalize
-
-for n = 1:size(field,ndimensions+1)
-    if ndimensions == 3
-        field[:,:,:,n] = (field[:,:,:,n] .- mean(tmp)) ./ std_or_1(tmp)
-    else
-        tmp = field[:,:,n][mask];
-        field[:,:,n] = (field[:,:,n] .- mean(tmp)) ./ std_or_1(tmp)
-    end
-end
-
+DIVAndNN.normalize!(mask,field)
 
 data_analysis = DIVAndNN.Format2020(expanduser("~/tmp/Emodnet-Bio2020/CSV-split"),"analysis")
 data_validation = DIVAndNN.Format2020(expanduser("~/tmp/Emodnet-Bio2020/CSV-split"),"validation")

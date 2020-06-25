@@ -3,19 +3,20 @@ using DIVAndNN
 using LinearAlgebra
 using Statistics
 using Random
+using Dates
 
 include("emodnet_bio_grid.jl")
 include("validate_probability.jl")
 include("PhytoInterp.jl")
 
+# create directories
 if !isdir(datadir)
     mkpath(datadir)
     mkpath(joinpath(datadir,"tmp"))
 end
 
-datafile = joinpath(datadir, "Biddulphia sinensis-1995-2020.csv")
 
-# download
+# download file from URL is necessary
 
 function maybedownload(url,fname)
     if !isfile(fname)
@@ -25,9 +26,24 @@ function maybedownload(url,fname)
     end
 end
 
+
+# GEBCO Bathymetry
+bathname = joinpath(datadir,"gebco_30sec_4.nc");
 maybedownload("https://dox.ulg.ac.be/index.php/s/VgLglubaTLetHzc/download",
               joinpath(datadir,"gebco_30sec_4.nc"))
 
+
+# Sample data file
+datafile = joinpath(datadir, "Biddulphia sinensis-1995-2020.csv")
+maybedownload("https://dox.ulg.ac.be/index.php/s/VgLglubaTLetHzc/download", datafile)
+
+maskname = joinpath(datadir,"mask.nc")
+bathisglobal = true
+
+
+# Environmental covariables
+
+#=
 maybedownload("https://ec.oceanbrowser.net/data/emodnet-projects/Phase-3/Combined/Water_body_phosphate_combined_V1.nc",
               joinpath(datadir,"tmp","Water_body_phosphate_combined_V1.nc"))
 
@@ -37,90 +53,57 @@ maybedownload("https://ec.oceanbrowser.net/data/emodnet-projects/Phase-3/Combine
 maybedownload("https://ec.oceanbrowser.net/data/emodnet-projects/Phase-3/Combined/Water_body_silicate_combined_V1.nc",
               joinpath(datadir,"tmp","Water_body_silicate_combined_V1.nc"))
 
-maybedownload("https://dox.ulg.ac.be/index.php/s/VgLglubaTLetHzc/download", datafile)
-
-bathname = joinpath(datadir,"gebco_30sec_4.nc");
-maskname = joinpath(datadir,"mask.nc")
-bathisglobal = true
-
 DIVAndNN.prep_mask(bathname,bathisglobal,gridlon,gridlat,years,maskname)
 DIVAndNN.prep_tempsalt(gridlon,gridlat,data_TS,datadir)
 DIVAndNN.prep_bath(bathname,bathisglobal,gridlon,gridlat,datadir)
- 
+
+=#
+
+maybedownload("https://dox.ulg.ac.be/index.php/s/y9Z0c1wb5YshVDW/download",
+              joinpath(datadir,"silicate.nc"))
+
+maybedownload("https://dox.ulg.ac.be/index.php/s/A1NPSWwQYkx6Wy6/download",
+              joinpath(datadir,"phosphate.nc"))
+
+maybedownload("https://dox.ulg.ac.be/index.php/s/LDPbPWBvW6wPmCw/download",
+              joinpath(datadir,"nitrogen.nc"))
+
 
 BLAS.set_num_threads(1)
 
 
+# load mask
 ds = Dataset(maskname,"r")
 mask = nomissing(ds["mask"][:,:]) .== 1
 close(ds)
 
-bathisglobal = true
 
+# compute local resolution
 mask_unused,pmn,xyi = DIVAnd.domain(bathname,bathisglobal,gridlon,gridlat);
 
 # load covariables
 covars_fname = [
-    ("bathymetry.nc","batymetry",identity),
-    ("nitrogen.nc",      "nitrogen",identity),
-    ("phosphate.nc",     "phosphate",identity),
-    ("silicate.nc",      "silicate",identity),
+    # filename       ,  var. name  , transformation function
+    ("bathymetry.nc" , "batymetry" , identity),
+    ("nitrogen.nc"   , "nitrogen"  , identity),
+    ("phosphate.nc"  , "phosphate" , identity),
+    ("silicate.nc"   , "silicate"  , identity),
 ]
 
-ncovars = length(covars_fname) + 1
+covars_fname = map(entry -> (joinpath(datadir,entry[1]),entry[2:end]...),covars_fname)
 
-sz = (length(gridlon),length(gridlat),ncovars)
+field = DIVAndNN.loadcovar((gridlon,gridlat),covars_fname;
+                           covars_const = true)
 
-field = zeros(sz)
-
-for i = 1:length(covars_fname)
-    (fname,varname,trans) = covars_fname[i]
-
-    Dataset(joinpath(datadir,fname)) do ds
-        tmp = nomissing(ds[varname][:],NaN)
-        tmp = trans.(tmp)
-        if ndimensions == 3
-            if ndims(tmp) == 2
-                field[:,:,:,i] = repeat(tmp,inner = (1,1,length(years)))
-            else
-                field[:,:,:,i] = tmp
-            end
-        else
-            field[:,:,i] = tmp
-        end
-    end
-end
+# normalize covariables
+DIVAndNN.normalize!(mask,field)
 
 
-X,Y = DIVAnd.ndgrid(gridlon,gridlat)
-
-field[:,:,end] .= 1
-
-
-@show size(field)
-function std_or_1(tmp)
-    s = std(tmp)
-    if s == 0
-        return one(s)
-    else
-        return s
-    end
-end
-
-# normalize
-
-for n = 1:size(field,3)
-    tmp = field[:,:,n][mask];
-    field[:,:,n] = (field[:,:,n] .- mean(tmp)) ./ std_or_1(tmp)
-end
-
-
+# Inventory of all data files
 data_analysis = DIVAndNN.Format2020(datadir,"")
-
 scientificname_accepted = listnames(data_analysis);
 
-lent = 0.6 # years
-lent = 0. # years
+# Parameters
 niter = 500
 trainfrac = 0.01
 epsilon2ap = 10
@@ -131,7 +114,7 @@ L2reg = 0.0001
 dropoutprob = 0.6
 len = 75e3
 
-
+# output directory
 outdir = joinpath(datadir,"Results","emodnet-bio-2020-ncovars$(length(covars_fname))-epsilon2ap$(epsilon2ap)-len$(len)-niter$(niter)-nlayers$(length(NLayers))")
 mkpath(outdir)
 
@@ -139,6 +122,7 @@ sname = String(scientificname_accepted[1])
 
 @info sname
 
+# load variable
 lon_a,lat_a,obstime_a,value_a,ids_a = loadbyname(data_analysis,years,sname)
 
 Random.seed!(1234)
