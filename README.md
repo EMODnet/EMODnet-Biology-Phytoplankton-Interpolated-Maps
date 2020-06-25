@@ -1,8 +1,11 @@
 # EMODnet-Biology-Phytoplankton-Interpolation
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gher-ulg/EMODnet-Biology-Interpolated-Maps/master?filepath=analysis%2Finterp_presence_absence.ipynb)
 
 This directory provides the code for the reading of data files and interpolation using `DIVAnd` software tool.
+
+* Heatmap [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gher-ulg/EMODnet-Biology-Interpolated-Maps/master?filepath=analysis%2Finterp_presence_absence.ipynb)
+* Neural network [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gher-ulg/EMODnet-Biology-Interpolated-Maps/master?filepath=analysis%2Femodnet_bio_DIVAndNN.ipynb)
+
 
 ## Directory structure
 
