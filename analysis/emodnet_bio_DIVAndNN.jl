@@ -1,5 +1,5 @@
-# # Probability map of phytoplancton in the North Sea using DIVAnd and a neural network
-# The first step is to load the modules
+# # Probability map of phytoplankton in the North Sea using DIVAnd and a neural network
+# The first step is to load the required modules
 
 using DIVAnd
 using DIVAndNN
@@ -8,11 +8,11 @@ using Statistics
 using Random
 using Dates
 
-# The domain is defined in the file `emodnet_bio_grid.jl`
+# The domain and the directory path `datadir` is defined in the file `emodnet_bio_grid.jl`
 
-include("../scripts/emodnet_bio_grid.jl")
-include("../scripts/validate_probability.jl")
-include("../scripts/PhytoInterp.jl")
+include("../scripts/emodnet_bio_grid.jl");
+include("../scripts/validate_probability.jl");
+include("../scripts/PhytoInterp.jl");
 
 # Create working directories
 mkpath(datadir)
@@ -51,13 +51,13 @@ maybedownload("https://dox.ulg.ac.be/index.php/s/VgLglubaTLetHzc/download", data
 maskname = joinpath(datadir,"mask.nc")
 DIVAndNN.prep_mask(bathname,bathisglobal,gridlon,gridlat,years,maskname)
 
-# load mask (true: sea, false: land)
+# Load the mask (true: sea, false: land)
 
 ds = Dataset(maskname,"r")
 mask = nomissing(ds["mask"][:,:]) .== 1
 close(ds)
 
-# Interpolate bathymetry
+# Interpolate the bathymetry
 DIVAndNN.prep_bath(bathname,bathisglobal,gridlon,gridlat,datadir)
 
 
@@ -92,10 +92,10 @@ maybedownload("https://dox.ulg.ac.be/index.php/s/LDPbPWBvW6wPmCw/download",
 BLAS.set_num_threads(1)
 
 
-# compute local resolution
+# Compute local resolution
 mask_unused,pmn,xyi = DIVAnd.domain(bathname,bathisglobal,gridlon,gridlat);
 
-# Newt we load the covariables.
+# Next we load the covariables.
 # The entries below correspond to the file name, the variable name and
 # transformation function
 
@@ -106,14 +106,14 @@ covars_fname = [
     ("silicate.nc"   , "silicate"  , identity),
 ]
 
-# add `datadir` to the file file names
+# Add `datadir` to the file file names
 
 covars_fname = map(entry -> (joinpath(datadir,entry[1]),entry[2:end]...),covars_fname)
 
 field = DIVAndNN.loadcovar((gridlon,gridlat),covars_fname;
                            covars_const = true);
 
-# normalize covariables
+# Normalize covariables
 DIVAndNN.normalize!(mask,field)
 
 
@@ -128,7 +128,7 @@ scientificname_accepted = listnames(data_analysis);
 
 niter = 500                         # number of iterations
 trainfrac = 0.01                    # fraction of data using during training
-epsilon2ap = 10                     # data contraint parameter
+epsilon2ap = 10                     # data constraint parameter
 epsilon2_background = 10            # error variance of obs. relative to background
 NLayers = [size(field)[end],4,1]    # number of layers of the neural network
 learning_rate = 0.001               # learning rate for the optimizer
@@ -180,3 +180,4 @@ create_nc_results(outname, gridlon, gridlat, value_analysis, sname;
 # ## Plots
 
 include("../scripts/emodnet_bio_plot2.jl")
+q
