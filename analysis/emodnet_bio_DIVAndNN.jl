@@ -10,9 +10,9 @@ using Dates
 
 # The domain is defined in the file `emodnet_bio_grid.jl`
 
-include("emodnet_bio_grid.jl")
-include("validate_probability.jl")
-include("PhytoInterp.jl")
+include("../scripts/emodnet_bio_grid.jl")
+include("../scripts/validate_probability.jl")
+include("../scripts/PhytoInterp.jl")
 
 # Create working directories
 mkpath(datadir)
@@ -179,4 +179,4 @@ create_nc_results(outname, gridlon, gridlat, value_analysis, sname;
 
 # ## Plots
 
-include("emodnet_bio_plot2.jl")
+include("../scripts/emodnet_bio_plot2.jl")
