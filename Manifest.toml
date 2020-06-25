@@ -198,9 +198,9 @@ version = "1.1.0"
 
 [[LibCURL_jll]]
 deps = ["LibSSH2_jll", "Libdl", "MbedTLS_jll", "Pkg", "Zlib_jll", "nghttp2_jll"]
-git-tree-sha1 = "54e7f2364ff5134e43c2514309ddf47d2eafa773"
+git-tree-sha1 = "6c534e2b2df618f722dd8fd1a753304f9476ddbe"
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
-version = "7.70.0+0"
+version = "7.70.0+1"
 
 [[LibGit2]]
 deps = ["Printf"]
@@ -208,18 +208,18 @@ uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 
 [[LibSSH2_jll]]
 deps = ["Libdl", "MbedTLS_jll", "Pkg"]
-git-tree-sha1 = "2daf0a757293e5355904b96262fcc54cf45d8fd3"
+git-tree-sha1 = "c6a9d7979d560963384ef1b003aff862506c386d"
 uuid = "29816b5a-b9ab-546f-933c-edad1886dfa8"
-version = "1.9.0+1"
+version = "1.9.0+2"
 
 [[Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 
 [[Libiconv_jll]]
 deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "e5256a3b0ebc710dbd6da0c0b212164a3681037f"
+git-tree-sha1 = "a06937d9aa48855f52484c9a77a2670158fa90e2"
 uuid = "94ce4f54-9a6c-5748-9c1c-f9c7231a4531"
-version = "1.16.0+2"
+version = "1.16.0+4"
 
 [[Libtiff_jll]]
 deps = ["JpegTurbo_jll", "Libdl", "Pkg", "Zlib_jll", "Zstd_jll"]
@@ -453,9 +453,9 @@ version = "0.5.2"
 
 [[XML2_jll]]
 deps = ["Libdl", "Libiconv_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "987c02a43fa10a491a5f0f7c46a6d3559ed6a8e2"
+git-tree-sha1 = "6b2ffe6728bdba991da4fc1aa5980a53db46a23f"
 uuid = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
-version = "2.9.9+4"
+version = "2.9.9+5"
 
 [[ZipFile]]
 deps = ["Libdl", "Printf", "Zlib_jll"]
@@ -465,9 +465,9 @@ version = "0.9.2"
 
 [[Zlib_jll]]
 deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "a2e0d558f6031002e380a90613b199e37a8565bf"
+git-tree-sha1 = "4838361eb3ba796a57457bdc183e1a128639d0ec"
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
-version = "1.2.11+10"
+version = "1.2.11+12"
 
 [[Zstd_jll]]
 deps = ["Libdl", "Pkg"]
@@ -477,6 +477,6 @@ version = "1.4.5+0"
 
 [[nghttp2_jll]]
 deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "d4b1ff45cfa721fd60f624fdb52c5a836fafaf8f"
+git-tree-sha1 = "4a274d8238d9fc75588a75962f33314dd60141e6"
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
-version = "1.40.0+0"
+version = "1.40.0+1"

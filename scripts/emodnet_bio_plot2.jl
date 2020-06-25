@@ -57,7 +57,6 @@ function plotanalysis(fname)
         scatter(lon[sel],lat[sel],4,value[sel],cmap = cmap,marker = "o")
         =#
 
-        @show extrema(mv)
         pcolor(gridlon,gridlat,pyo(copy(mv')),cmap = cmap)
         clim(cl_prop)
         title(titlestr)
