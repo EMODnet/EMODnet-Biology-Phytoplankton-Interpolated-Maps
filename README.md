@@ -3,8 +3,8 @@
 
 This directory provides the code for the reading of data files and performing spatial interpolation using `DIVAnd` software tool.
 
-* Heatmap [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gher-ulg/EMODnet-Biology-Interpolated-Maps/master?filepath=analysis%2Finterp_presence_absence.ipynb)
-* Neural network [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gher-ulg/EMODnet-Biology-Interpolated-Maps/master?filepath=analysis%2Femodnet_bio_DIVAndNN.ipynb)
+* [Heatmap](https://github.com/gher-ulg/EMODnet-Biology-Interpolated-Maps/blob/master/analysis/interp_presence_absence.ipynb) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gher-ulg/EMODnet-Biology-Interpolated-Maps/master?filepath=analysis%2Finterp_presence_absence.ipynb)
+* [Neural network](https://github.com/gher-ulg/EMODnet-Biology-Interpolated-Maps/blob/master/analysis/emodnet_bio_DIVAndNN.ipynb) (binder does only provide 2GB of memory which is insufficient for this notebook)
 
 
 ## Directory structure

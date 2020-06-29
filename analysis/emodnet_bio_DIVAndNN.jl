@@ -23,7 +23,7 @@ mkpath(joinpath(datadir,"tmp"))
 
 function maybedownload(url,fname)
     if !isfile(fname)
-        cp(download(url),fname)
+        mv(download(url),fname)
     else
         @info("$url is already downloaded")
     end
@@ -34,7 +34,7 @@ end
 
 bathname = joinpath(datadir,"gebco_30sec_4.nc");
 bathisglobal = true
-maybedownload("https://dox.ulg.ac.be/index.php/s/VgLglubaTLetHzc/download",
+maybedownload("https://dox.ulg.ac.be/index.php/s/RSwm4HPHImdZoQP/download",
               joinpath(datadir,"gebco_30sec_4.nc"))
 
 
