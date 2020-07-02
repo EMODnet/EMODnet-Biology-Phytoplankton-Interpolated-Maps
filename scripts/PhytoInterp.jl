@@ -2,6 +2,7 @@ using PyPlot
 using Proj4
 using DIVAnd
 using NCDatasets
+using DelimitedFiles
 using GridInterpolations
 
 """
@@ -22,7 +23,11 @@ function read_data_phyto(datafile::String)
     datecolumn = findall(columntitles .== "date")[1]
     xcolumn = findall(columntitles .== "xUTM")[1]
     ycolumn = findall(columntitles .== "yUTM")[1]
-    occurscolumn = findall(columntitles .== "occurs")[1]
+    # occurscolumn = findall(columntitles .== "occurs")[1]
+
+    # New data files have column called "occurrence" instead of "occurs"
+    # Also they have a column "occurrenceid" that we're not interested in
+    occurscolumn = findall(occursin.("occur", columntitles) .& .!occursin.("id", columntitles))[1]
 
     df = DateFormat("y-m-d");
     dates = Date.(data[2:end,datecolumn], df)
@@ -45,7 +50,8 @@ julia> speciesname = get_species_name("Archaeperidinium-1995-2020.csv")
 ```
 """
 function get_species_name(datafile::String)::String
-    return split(datafile, "-")[1]
+    m = match(r"(.+)-1995-2020.csv", datafile)
+    return m[1]
 end
 
 """
@@ -244,4 +250,44 @@ function plot_heatmap(longrid::StepRangeLen, latgrid::StepRangeLen,
     else
         PyPlot.show()
     end
+end
+
+"""
+    count_obs(longrid, latgrid, lon, lat, title)
+
+Count the number of observations `obscount` and its logarithm `obscountlog`
+made in each cell of the grid defined by longrid, latgrid.
+
+## Examples
+```julia-repl
+julia> obscount, obscountlog = count_obs(longrid, latgrid, lon, lat)
+```
+"""
+function count_obs(longrid::StepRangeLen, latgrid::StepRangeLen,
+                   lon::Array, lat::Array)
+
+    Δlon = longrid[2] - longrid[1]
+    Δlat = latgrid[2] - latgrid[1]
+
+    obscount = Array{Float64, 2}(undef, length(longrid) - 1, length(latgrid) - 1)
+    obscountlog = Array{Float64, 2}(undef, length(longrid) -1 , length(latgrid) -1 )
+
+    for (i, long) in enumerate(longrid[1:end-1])
+        goodlon = (lon .>= long) .& (lon .< long + Δlon);
+        for (j, latg) in enumerate(latgrid[1:end-1])
+            goodlat = (lat .>= latg) .& (lat .< latg + Δlat);
+            goodpos = findall(goodlon .& goodlat);
+            np = length(goodpos);
+            if np == 0
+                obscount[i, j] = NaN
+                obscountlog[i, j] = NaN
+            else
+                obscount[i, j] = np
+                obscountlog[i, j] = log10(np)
+            end
+
+        end
+    end
+
+    return obscount::Array, obscountlog::Array
 end
