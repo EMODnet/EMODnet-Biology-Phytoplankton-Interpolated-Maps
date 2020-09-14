@@ -14,7 +14,8 @@ function interpcv(xyi,value_analysis,xy)
     xyi = map(x -> collect(x),xyi);
 
     tmp_itp = Interpolations.interpolate(xyi, value_analysis, Gridded(Linear()))
-    itp = Interpolations.extrapolate(tmp_itp,Line())
+    #itp = Interpolations.extrapolate(tmp_itp,Line())
+    itp = Interpolations.extrapolate(tmp_itp,NaN)
 
     #save("tmp.jld2","xyi",xyi,"value_analysis",value_analysis,"xy",xy)
     xyi = zeros(length(xy))
@@ -51,6 +52,7 @@ function validate_probability(xyi,analysis_probability,xy_cv,occurs_cv )
 
     y = occurs_cv[sels]
     p = p[sels]
+    #@show extrema(p)
 
     J = -sum(y .* log.(p)  + (1 .- y) .* log.(1 .- p)) / length(y)
     return J

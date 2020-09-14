@@ -17,6 +17,7 @@ using Base.Threads
 using LinearAlgebra
 using DIVAndNN
 
+#%%
 
 BLAS.set_num_threads(1)
 
@@ -24,30 +25,71 @@ BLAS.set_num_threads(1)
 include("validate_probability.jl")
 include("PhytoInterp.jl")
 include("emodnet_bio_grid.jl")
+include("splitdata.jl")
 
 Random.seed!(1234)
 
+function maybedownload(url,fname)
+    if !isfile(fname)
+        @info "downloading $url"
+        download(url,fname)
+    else
+        @info("$url is already downloaded")
+    end
+end
+
+mkpath(datadir)
+mkpath(joinpath(datadir,"tmp"))
+
 # land-sea mask and domain parameters
 
+
+bathname = joinpath(datadir,"gebco_30sec_4.nc");
+bathisglobal = true;
+maybedownload("https://dox.ulg.ac.be/index.php/s/RSwm4HPHImdZoQP/download",
+              joinpath(datadir,"gebco_30sec_4.nc"))
+
 maskname = joinpath(datadir,"mask.nc");
+
+if !isfile(maskname)
+    DIVAndNN.prep_mask(bathname,bathisglobal,gridlon,gridlat,years,maskname)
+end
 
 ds = Dataset(maskname,"r")
 mask = nomissing(ds["mask"][:,:]) .== 1
 close(ds)
 
+
+
+# Interpolate the bathymetry
+DIVAndNN.prep_bath(bathname,bathisglobal,gridlon,gridlat,datadir)
+
+
+maybedownload("https://ec.oceanbrowser.net/data/emodnet-projects/Phase-3/Combined/Water_body_phosphate_combined_V1.nc",
+              joinpath(datadir,"tmp","Water_body_phosphate_combined_V1.nc"))
+
+maybedownload("https://ec.oceanbrowser.net/data/emodnet-projects/Phase-3/Combined/Water_body_nitrogen_combined_V1.nc",
+              joinpath(datadir,"tmp","Water_body_nitrogen_combined_V1.nc"))
+
+maybedownload("https://ec.oceanbrowser.net/data/emodnet-projects/Phase-3/Combined/Water_body_silicate_combined_V1.nc",
+              joinpath(datadir,"tmp","Water_body_silicate_combined_V1.nc"))
+
+
+if !isfile(joinpath(datadir,data_TS[1][end] * ".nc"))
+    DIVAndNN.prep_tempsalt(gridlon,gridlat,data_TS,datadir)
+end
+
 if ndimensions == 3
     mask = repeat(mask,inner=(1,1,length(years)))
 end
-
-bathname = joinpath(datadir,"gebco_30sec_4.nc");
-bathisglobal = true;
-
 
 if ndimensions == 3
     mask2,pmn,xyi = DIVAnd.domain(bathname,bathisglobal,gridlon,gridlat,years);
 else
     mask2,pmn,xyi = DIVAnd.domain(bathname,bathisglobal,gridlon,gridlat);
 end
+
+
 
 
 covars_coord = false
@@ -74,8 +116,19 @@ field = DIVAndNN.loadcovar((gridlon,gridlat),covars_fname;
 
 DIVAndNN.normalize!(mask,field)
 
-data_analysis = DIVAndNN.Format2020(expanduser("~/tmp/Emodnet-Bio2020/CSV-split"),"analysis")
-data_validation = DIVAndNN.Format2020(expanduser("~/tmp/Emodnet-Bio2020/CSV-split"),"validation")
+csvsplitdir = expanduser("~/tmp/Emodnet-Bio2020/CSV-split")
+
+csvdir = joinpath(datadir,"CSV")
+csvsplitdir = joinpath(datadir,"CSV-split")
+
+validation_fraction = 0.2
+
+if !isdir(csvsplitdir)
+    splitdir(csvdir,validation_fraction,csvsplitdir)
+end
+
+data_analysis = DIVAndNN.Format2020(csvsplitdir,"analysis")
+data_validation = DIVAndNN.Format2020(csvsplitdir,"validation")
 
 
 scientificname_accepted = listnames(data_analysis);
@@ -148,9 +201,9 @@ for len = [50e3, 75e3, 100e3, 125e3]
         outdir = joinpath(datadir,"Results","emodnet-bio-2020-ncovars$(length(covars_fname))-epsilon2ap$(epsilon2ap)-len$(len)-niter$(niter)-nlayers$(length(NLayers))")
         mkpath(outdir)
 
-        nameindex = parse(Int,get(ENV,"INDEX","1"))
-
+        nameindex = 1
         #Threads.@threads for nameindex in 1:length(scientificname_accepted)
+        #for nameindex in 3:3
         for nameindex in 1:length(scientificname_accepted)
 
             sname = String(scientificname_accepted[nameindex])
@@ -173,6 +226,7 @@ for len = [50e3, 75e3, 100e3, 125e3]
             #time = Float64.(Dates.year.(obstime_a))
 
             @show value_a[1:min(end,10)]
+            @show extrema(value_a)
             @show length(value_a)
 
             Random.seed!(1234)
@@ -197,6 +251,7 @@ for len = [50e3, 75e3, 100e3, 125e3]
             #value_a[(lon_a .< 4) .& (lat_a .< 52)] .= 1.
             #value_a .= 1
             function plotres(i,lossi,value_analysis,y,gradloss,out,iobssel,obspos)
+                #@show extrema(value_analysis[isfinite.(value_analysis)])
                 vp = validate_probability((gridlon,gridlat),value_analysis,(lon_cv,lat_cv),value_cv)
                 push!(loss_iter,lossi)
                 push!(val_iter,vp)
@@ -274,3 +329,4 @@ for len = [50e3, 75e3, 100e3, 125e3]
 
     end
 end
+

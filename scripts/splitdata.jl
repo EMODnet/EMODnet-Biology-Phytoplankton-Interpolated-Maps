@@ -2,9 +2,8 @@ using DataFrames, CSV
 using Random
 using Glob
 
-# This script should be run in the directory containting all original CSV files
 
-function splitfile(fname,validation_fraction,splitdir)
+function splitfile(fname,validation_fraction,csvsplitdir)
     @info "split file $fname"
 
     # repeatable random number per file
@@ -24,15 +23,28 @@ function splitfile(fname,validation_fraction,splitdir)
     @show sum(for_validation)
     @show length(for_validation)
 
-    CSV.write(joinpath(splitdir,replace(fname,".csv" => ".analysis.csv")),df[.!for_validation,:],quotestrings=true)
-    CSV.write(joinpath(splitdir,replace(fname,".csv" => ".validation.csv")),df[for_validation,:],quotestrings=true)
+    CSV.write(joinpath(csvsplitdir,replace(basename(fname),".csv" => ".analysis.csv")),df[.!for_validation,:],quotestrings=true)
+    CSV.write(joinpath(csvsplitdir,replace(basename(fname),".csv" => ".validation.csv")),df[for_validation,:],quotestrings=true)
 end
 
+"""
+This script should be run in the directory containting all original CSV files
+
+# example
+```julia
 validation_fraction = 0.2
-
-splitdir = "../CSV-split"
+csvsplitdir = "../CSV-split"
 csvdir = "./"
+splitdir(csvdir,validation_fraction,csvsplitdir)
+```
+"""
+function splitdir(csvdir,validation_fraction,csvsplitdir)
+    mkpath(csvsplitdir)
 
-for fname in glob("*csv",csvdir)
-    splitfile(fname,validation_fraction,splitdir)
+    for fname in glob("*csv",csvdir)
+        splitfile(fname,validation_fraction,csvsplitdir)
+    end
 end
+
+
+
