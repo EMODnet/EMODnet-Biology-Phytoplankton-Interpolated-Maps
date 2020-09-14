@@ -2,12 +2,16 @@
 gridlon = -2.:0.1:10.
 gridlat = 51.:0.1:56.
 
+# Greater North Sea
+gridlon = -16.:0.1:9.
+gridlat = 45.:0.1:66.
+
 # all years combined
 years = 0:3000
 ndimensions = 2
 
 
-datadir = get(ENV,"DATADIR",expanduser("~/tmp/Emodnet-Bio2020"))
+datadir = get(ENV,"DATADIR",expanduser("~/tmp/Emodnet-Bio2020-GreaterNorthSea"))
 
 # Serge Scory, Charles Troupin (2019). SeaDataCloud North Sea Temperature and Salinity Climatology V1.
 # https://doi.org/10.12770/6c9e755f-14a3-48be-95d5-944441f62b5f
