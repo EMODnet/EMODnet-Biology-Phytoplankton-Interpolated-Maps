@@ -174,7 +174,7 @@ value_analysis,fw0 = DIVAndNN.analysisprob(
 # ## Save the results
 outname = joinpath(outdir,"DIVAndNN_$(sname)_interp.nc")
 create_nc_results(outname, gridlon, gridlat, value_analysis, sname;
-                  varname = "probability", long_name="occurance probability");
+                  varname = "probability", long_name="occurrence probability");
 
 
 # ## Plots
