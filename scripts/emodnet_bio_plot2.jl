@@ -13,8 +13,13 @@ using PyCall
 
 include("emodnet_bio_grid.jl")
 
-data_analysis = DIVAndNN.Format2020(expanduser("~/tmp/Emodnet-Bio2020/CSV-split"),"analysis")
-data_validation = DIVAndNN.Format2020(expanduser("~/tmp/Emodnet-Bio2020/CSV-split"),"validation")
+datadir = expanduser("~/tmp/Emodnet-Bio2020/")
+datadir = expanduser("~/tmp/Emodnet-Bio2020-GreaterNorthSea")
+
+csvsplitdir = joinpath(datadir,"CSV-split")
+
+data_analysis = DIVAndNN.Format2020(csvsplitdir,"analysis")
+data_validation = DIVAndNN.Format2020(csvsplitdir,"validation")
 
 
 function pyo(a::Array{T,N}) where {T,N}
@@ -98,6 +103,7 @@ end
 
 # define
 # outdir = ...
+outdir = pwd()
 
 fig = figure(figsize = (7,7))
 for fname in glob("*nc",outdir)
