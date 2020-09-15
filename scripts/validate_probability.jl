@@ -36,7 +36,7 @@ end
 
 The function returns the  log-likelihood for a probabilistic model for binary
 classification. `xyi` is a tuple with the analysis grid (e.g. `gridlon`,
-`gridlat`), `analysis_probability` is the gridded probability of occurance
+`gridlat`), `analysis_probability` is the gridded probability of occurrence
 `xy_cv` is a tuple with the cross-validation points `(obslon,obslat)` and
 `occurs_cv` a vector of zeros (absence) and ones (presence).
 """
