@@ -63,3 +63,18 @@ end
     finterp2 = reinterp_field(longrid, latgrid, field, [0.], [0.])
     @test finterp2 == [1.0]
 end
+
+@testset "Bin count" begin
+    longridtest = 0.:3.
+    latgridtest = 0.:2.
+    lontest = [0.5, 0.5, 2.1, 2.2, 2.3]
+    lattest = [0.5, 0.5, 1.4, 1.5, 1.6]
+    obscount, obscountlog = count_obs(longridtest, latgridtest, lontest, lattest)
+
+    @test obscount[1,1] == 2.0
+    @test obscount[3,2] == 3.0
+    @test isnan(obscount[2, 2])
+    @test isnan(obscount[3, 1])
+    @test obscountlog[1,1] == 0.3010299956639812
+    @test obscountlog[3,2] == 0.47712125471966244
+end
