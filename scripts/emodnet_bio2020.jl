@@ -227,7 +227,7 @@ for len = [50e3, 75e3, 100e3, 125e3]
             outname = joinpath(outdir,"DIVAndNN_$(sname)_interp.nc")
 
             create_nc_results(outname, gridlon, gridlat, value_analysis, sname;
-                              varname = "probability", long_name="occurance probability");
+                              varname = "probability", long_name="occurrence probability");
 
             open(paramname,"w") do f
                 write(f,JSON.json(

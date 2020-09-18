@@ -73,7 +73,7 @@ function plotanalysis(fname)
     #cl_prop = extrema(value_analysis[isfinite.(value_analysis)]);
     cl_prop = extrema(all_data[isfinite.(all_data)]);
 
-    title("(a) Probability of occurance");
+    title("(a) Probability of occurrence");
     clim(cl_prop)
     #colorbar(orientation=orientation)
     decoration()
