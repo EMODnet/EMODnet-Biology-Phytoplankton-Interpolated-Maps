@@ -43,13 +43,16 @@ The content of a data file looks like this (example for `Gymnodinium-1995-2020.c
 
 This directory contains the notebooks for the preparation and analysis of the data.
 
-* `emodnet_bio_DIVAndNN.ipynb`: compute the probability map of phytoplankton in the North Sea using `DIVAnd` and a neural network.
+* `scripts/emodnet_bio2020.jl`: compute the probability map of phytoplankton in the North Sea using `DIVAnd` and a neural network.
 * `heatmap_testcase.ipynb`: several simple test cases to illustrate how the probability is derived from heatmaps.
 * `interp_presence_absence.ipynb`: documented application showing the interpolation of a single species: _Biddulphia Sinensis_.
 * `interp_presence_absence_prod.ipynb`
 
 * `plot_data_histograms.ipynb`
 * `plot_validationscore_L.ipynb`
+
+
+The environment variable `DATADIR` should contain the path where the results should be written to.
 
 ## Citation
 
