@@ -140,27 +140,29 @@ function create_nc_results(filename::String, lons, lats, field,
                            valex=-999.9,
                            varname = "heatmap",
                            long_name = "Heatmap",
+                           time = nothing,
                            )
     Dataset(filename, "c") do ds
 
         # Dimensions
         ds.dim["lon"] = length(lons)
         ds.dim["lat"] = length(lats)
-        #ds.dim["time"] = Inf # unlimited dimension
 
         # Declare variables
-        ncfield = defVar(ds, varname, Float64, ("lon", "lat"))
+
+        if time == nothing
+            ncfield = defVar(ds, varname, Float64, ("lon", "lat"))
+        else
+            ds.dim["time"] = length(time)
+            ncfield = defVar(ds, varname, Float64, ("lon", "lat", "time"))
+            nctime = defVar(ds,"time", Float64, ("time",))
+            nctime.attrib["units"] = "years"
+            nctime.attrib["time"] = "time"
+        end
+
         ncfield.attrib["missing_value"] = Float64(valex)
         ncfield.attrib["_FillValue"] = Float64(valex)
         ncfield.attrib["long_name"] = long_name
-
-
-        """
-        nctime = defVar(ds,"time", Float32, ("time",))
-        nctime.attrib["missing_value"] = Float32(valex)
-        nctime.attrib["units"] = "seconds since 1981-01-01 00:00:00"
-        nctime.attrib["time"] = "time"
-        """
 
         nclon = defVar(ds,"lon", Float32, ("lon",))
         nclon.attrib["missing_value"] = Float32(valex)
@@ -188,7 +190,9 @@ function create_nc_results(filename::String, lons, lats, field,
 
         nclon[:] = lons
         nclat[:] = lats;
-
+        if time != nothing
+            nctime[:] = time
+        end
     end
 end;
 

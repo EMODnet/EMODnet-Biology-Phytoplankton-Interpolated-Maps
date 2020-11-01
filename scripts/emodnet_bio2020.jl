@@ -17,8 +17,6 @@ using Base.Threads
 using LinearAlgebra
 using DIVAndNN
 
-#%%
-
 BLAS.set_num_threads(1)
 
 
@@ -42,7 +40,6 @@ mkpath(datadir)
 mkpath(joinpath(datadir,"tmp"))
 
 # land-sea mask and domain parameters
-
 
 bathname = joinpath(datadir,"gebco_30sec_4.nc");
 bathisglobal = true;
@@ -114,9 +111,11 @@ field = DIVAndNN.loadcovar((gridlon,gridlat),covars_fname;
                            covars_coord = covars_coord,
                            covars_const = covars_const)
 
+if ndimensions == 3
+    sz = size(field)
+    field = repeat(reshape(field,(sz[1],sz[2],1,sz[3])),1,1,length(years),1)
+end
 DIVAndNN.normalize!(mask,field)
-
-csvsplitdir = expanduser("~/tmp/Emodnet-Bio2020/CSV-split")
 
 csvdir = joinpath(datadir,"CSV")
 csvsplitdir = joinpath(datadir,"CSV-split")
@@ -135,6 +134,9 @@ scientificname_accepted = listnames(data_analysis);
 
 lent = 0.6 # years
 lent = 0. # years
+if ndimensions == 3
+    lent = 5.
+end
 niter = 100000
 #niter = 100000
 #niter = 300000
@@ -195,10 +197,12 @@ len = 75e3
 #len = 30e3
 #len = 20e3
 
-for len = [50e3, 75e3, 100e3, 125e3]
-    for epsilon2ap = [1, 5, 10, 50, 100]
+#for len = [50e3, 75e3, 100e3, 125e3]
+#    for epsilon2ap = [1, 5, 10, 50, 100, 500]
+for len = [100e3]
+    for epsilon2ap = [0.1]
 
-        outdir = joinpath(datadir,"Results","emodnet-bio-2020-ncovars$(length(covars_fname))-epsilon2ap$(epsilon2ap)-len$(len)-niter$(niter)-nlayers$(length(NLayers))")
+        outdir = joinpath(datadir,"Results","emodnet-bio-2020-ncovars$(length(covars_fname))-epsilon2ap$(epsilon2ap)-len$(len)-niter$(niter)-nlayers$(length(NLayers))-ndimensions$(ndimensions)")
         mkpath(outdir)
 
         nameindex = 1
@@ -223,7 +227,8 @@ for len = [50e3, 75e3, 100e3, 125e3]
             lon_a,lat_a,obstime_a,value_a,ids_a = loadbyname(data_analysis,years,sname)
             lon_cv,lat_cv,obstime_cv,value_cv,ids_cv = loadbyname(data_validation,years,sname)
 
-            #time = Float64.(Dates.year.(obstime_a))
+            time_a = Float64.(Dates.year.(obstime_a))
+            time_cv = Float64.(Dates.year.(obstime_cv))
 
             @show value_a[1:min(end,10)]
             @show extrema(value_a)
@@ -233,17 +238,18 @@ for len = [50e3, 75e3, 100e3, 125e3]
 
             value_analysis = zeros(size(mask))
 
-            xobs_a = if ndimensions == 3
-                (lon_a,lat_a,time_a)
+            if ndimensions == 3
+                xobs_a = (lon_a,lat_a,time_a)
+                xobs_cv = (lon_cv,lat_cv,time_cv)
+                lenxy = (len,len,lent)
+                analysis_grid = (gridlon,gridlat,years)
             else
-                (lon_a,lat_a)
+                xobs_a = (lon_a,lat_a)
+                xobs_cv = (lon_cv,lat_cv)
+                lenxy = (len,len)
+                analysis_grid = (gridlon,gridlat)
             end
 
-            lenxy = if ndimensions == 3
-                (len,len,lent)
-            else
-                (len,len)
-            end
 
             loss_iter = []
             val_iter = []
@@ -252,7 +258,7 @@ for len = [50e3, 75e3, 100e3, 125e3]
             #value_a .= 1
             function plotres(i,lossi,value_analysis,y,gradloss,out,iobssel,obspos)
                 #@show extrema(value_analysis[isfinite.(value_analysis)])
-                vp = validate_probability((gridlon,gridlat),value_analysis,(lon_cv,lat_cv),value_cv)
+                vp = validate_probability(analysis_grid,value_analysis,xobs_cv,value_cv)
                 push!(loss_iter,lossi)
                 push!(val_iter,vp)
 	            @printf("| %10d | %30.5f | %30.5f |\n",i,lossi,vp)
@@ -276,13 +282,16 @@ for len = [50e3, 75e3, 100e3, 125e3]
                 epsilon2_background = epsilon2_background,
             )
 
-            vp = validate_probability((gridlon,gridlat),value_analysis,(lon_cv,lat_cv),value_cv)
+            vp = validate_probability(analysis_grid,value_analysis,xobs_cv,value_cv)
             @show vp
 
             outname = joinpath(outdir,"DIVAndNN_$(sname)_interp.nc")
 
             create_nc_results(outname, gridlon, gridlat, value_analysis, sname;
-                              varname = "probability", long_name="occurrence probability");
+                              varname = "probability",
+                              long_name="occurrence probability",
+                              time = (ndimensions == 3 ? years : nothing)
+                              );
 
             open(paramname,"w") do f
                 write(f,JSON.json(

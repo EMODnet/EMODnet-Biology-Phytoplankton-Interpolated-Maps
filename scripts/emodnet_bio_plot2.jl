@@ -29,19 +29,18 @@ end
 
 function plotanalysis(fname)
     ds = NCDataset(fname)
-    value_analysis = nomissing(ds["probability"][:,:],NaN)
+    value_analysis = nomissing(ds["probability"][:],NaN)
     sname = split(basename(fname),"_")[2]
     close(ds)
 
     lon_a,lat_a,obstime_a,value_a,ids_a = DIVAndNN.loadbyname(data_analysis,years,sname)
     lon_cv,lat_cv,obstime_cv,value_cv,ids_cv = DIVAndNN.loadbyname(data_validation,years,sname)
 
-    XY = DIVAnd.ndgrid(gridlon,gridlat)
-
-    mv_a = DIVAndNN.binobs((lon_a,lat_a),value_a,XY)
-    mv_cv = DIVAndNN.binobs((lon_cv,lat_cv),value_cv,XY)
-
-    all_data = vcat(value_analysis[:],mv_a[:],mv_cv[:])
+    if ndims(value_analysis) == 2
+        ntime = 1
+    else
+        ntime = size(value_analysis,3)
+    end
 
     #cmap = PyPlot.cm.hot_r
     cmap = PyPlot.cm.plasma
@@ -69,36 +68,60 @@ function plotanalysis(fname)
         decoration()
     end
 
+    for n = 1:ntime
+        clf()
 
-    fig.suptitle(sname,style="italic")
+        if ndims(value_analysis) == 3
+            time_a = Float64.(Dates.year.(obstime_a))
+            time_cv = Float64.(Dates.year.(obstime_cv))
+            sel_a = abs.(time_a .- years[n]) .<= 5
+            sel_cv = abs.(time_cv .- years[n]) .<= 5
+        else
+            sel_a = trues(size(lon_a))
+            sel_cv = trues(size(lon_cv))
+        end
 
-    subplot(2,2,1);
-    imm = pcolor(gridlon,gridlat,value_analysis',cmap = cmap);
+        XY = DIVAnd.ndgrid(gridlon,gridlat)
+        @show size(lon_cv),size(sel_cv)
+        mv_a = DIVAndNN.binobs((lon_a[sel_a],lat_a[sel_a]),value_a[sel_a],XY)
+        mv_cv = DIVAndNN.binobs((lon_cv[sel_cv],lat_cv[sel_cv]),value_cv[sel_cv],XY)
 
-    #cl_prop = extrema(value_analysis[isfinite.(value_analysis)]);
-    cl_prop = extrema(all_data[isfinite.(all_data)]);
+        all_data = vcat(value_analysis[:],mv_a[:],mv_cv[:])
 
-    title("(a) Probability of occurrence");
-    clim(cl_prop)
-    #colorbar(orientation=orientation)
-    decoration()
+        fig.suptitle(sname,style="italic")
+
+        subplot(2,2,1);
+        imm = pcolor(gridlon,gridlat,value_analysis[:,:,n]',cmap = cmap);
+
+        #cl_prop = extrema(value_analysis[isfinite.(value_analysis)]);
+        cl_prop = extrema(all_data[isfinite.(all_data)]);
+
+        if ndims(value_analysis) == 2
+            title("(a) Probability of occurrence");
+        else
+            title("(a) Probability of occurrence $(years[n]-5)-$(years[n]+5)");
+        end
+        clim(cl_prop)
+        #colorbar(orientation=orientation)
+        decoration()
 
 
-    cbar_ax = fig.add_axes([0.55, 0.35, 0.35, 0.025]); fig.colorbar(imm, cax=cbar_ax,orientation=orientation)
+        cbar_ax = fig.add_axes([0.55, 0.35, 0.35, 0.025]); fig.colorbar(imm, cax=cbar_ax,orientation=orientation)
 
-    subplot(2,2,2);
-    #scatter(lon_a,lat_a,10,value_a,cmap = cmap)
-    obsplot(mv_a,"(b) Data used in the analysis",cl_prop)
+        subplot(2,2,2);
+        #scatter(lon_a,lat_a,10,value_a,cmap = cmap)
+        obsplot(mv_a,"(b) Data used in the analysis",cl_prop)
 
-    #@show mean(value_analysis[isfinite.(value_analysis)])
-    #@show mean(value_a)
-    #@show mean(value_cv)
+        #@show mean(value_analysis[isfinite.(value_analysis)])
+        #@show mean(value_a)
+        #@show mean(value_cv)
 
-    subplot(2,2,3);
-    obsplot(mv_cv,"(c) Validation data",cl_prop)
+        subplot(2,2,3);
+        obsplot(mv_cv,"(c) Validation data",cl_prop)
 
-    figname = replace(fname,".nc" => ".png")
-    savefig(figname)
+        figname = replace(fname,".nc" => "_n$(n).png")
+        savefig(figname)
+    end
 end
 
 # define

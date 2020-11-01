@@ -8,7 +8,10 @@ gridlat = 45.:0.1:66.
 
 # all years combined
 years = 0:3000
+years = 1995:5:2015
+
 ndimensions = 2
+ndimensions = 3
 
 
 datadir = get(ENV,"DATADIR",expanduser("~/tmp/Emodnet-Bio2020-GreaterNorthSea"))
