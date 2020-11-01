@@ -137,65 +137,23 @@ lent = 0. # years
 if ndimensions == 3
     lent = 5.
 end
-niter = 100000
-#niter = 100000
-#niter = 300000
-#niter = 10
-niter = 2000*100
-#niter = 400000 * 16
-#testing
-#niter = 10
-#niter = 2000
-#niter = 2000*20
+
 niter = 500
 trainfrac = 0.01
-#for l = 1:Ntries
 l=1
 
 
-#epsilon2ap = 1.5
-#epsilon2ap = 2
-epsilon2ap = 5
 epsilon2ap = 10
-#epsilon2ap = 50
-#@show std(value)
-#epsilon2ap = epsilon2
-#epsilon2ap = 0.5
-#epsilon2ap = 1.
-#epsilon2ap = 0.01
-#epsilon2ap = 0.1
-#epsilon2ap = 0.001
-#epsilon2ap = 0.005
-
-
 epsilon2_background = 10
 
-#NLayers = [size(field)[end],3,1]
 NLayers = [size(field)[end],4,1]
 
-#NLayers = [size(field)[end],4,2,1]
-#NLayers = [size(field)[end],5,1]
-#NLayers = [size(field)[end],2,1]
-#NLayers = [size(field)[end],1]
-#NLayers = []
 
-learning_rate = 0.00001
 learning_rate = 0.001
 L2reg = 0.0001
-dropoutprob = 0.01
-dropoutprob = 0.1
 dropoutprob = 0.6
-#dropoutprob = 0.99
 
-len = 50e3
-len = 50e3
-len = 80e3
 len = 75e3
-#len = 100e3
-#len = 120e3
-#len = 150e3
-#len = 30e3
-#len = 20e3
 
 #for len = [50e3, 75e3, 100e3, 125e3]
 #    for epsilon2ap = [1, 5, 10, 50, 100, 500]
@@ -206,14 +164,9 @@ for len = [100e3]
         mkpath(outdir)
 
         nameindex = 1
-        #Threads.@threads for nameindex in 1:length(scientificname_accepted)
-        #for nameindex in 3:3
         for nameindex in 1:length(scientificname_accepted)
 
             sname = String(scientificname_accepted[nameindex])
-            #sname = "Lithodesmium undulatum"
-            #sname = "Asterionella kariana"
-            #sname = "Chaetoceros decipiens"
             global loss_iter
             global val_iter
             @info sname
