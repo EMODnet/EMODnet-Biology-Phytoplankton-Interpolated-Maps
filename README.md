@@ -16,7 +16,8 @@ This directory provides the code for the reading of data files and performing sp
 ├── docs/
 ├── product/
 │   ├── figures/
-│   └── netCDF/
+│   ├── netCDF/
+│   └── parameters/
 └── scripts/
 ```
 
