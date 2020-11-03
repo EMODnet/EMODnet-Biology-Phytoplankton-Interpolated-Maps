@@ -155,6 +155,8 @@ dropoutprob = 0.6
 
 len = 75e3
 
+paramdir = joinpath(outdir,"..","parameters")
+
 #for len = [50e3, 75e3, 100e3, 125e3]
 #    for epsilon2ap = [1, 5, 10, 50, 100, 500]
 for len = [100e3]
@@ -171,7 +173,7 @@ for len = [100e3]
             global val_iter
             @info sname
 
-            paramname = joinpath(outdir,"DIVAndNN_$(sname)_interp.json")
+            paramname = joinpath(paramdir,"DIVAndNN_$(sname)_interp.json")
 
             if isfile(paramname)
                 continue
@@ -270,7 +272,7 @@ for len = [100e3]
 
         score = DIVAndNN.summary(outdir)
 
-        paramname2 = joinpath(outdir,"DIVAndNN.json")
+        paramname2 = joinpath(paramdir,"DIVAndNN.json")
 
         open(paramname2,"w") do f
             write(f,JSON.json(
