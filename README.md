@@ -105,13 +105,14 @@ The accuracy of the interpolated field depends strongly on the distribution of t
 ![example](docs/example.png)
 
 Neural network reconstruction with DIVAnd for Biddulphia. Panel (a) is the derived probability and (b) and (c) are occurrence data (absence is counted as 0 and presence counted as 1) averaged by unique stations for the training data and validation data respectively.
-Production
 
-* The procedure described in the previous sections has been applied to the 200 Phytoplankton species provided by Deltares. For each species, we have generated:
+### Production
+
+The procedure described in the previous sections has been applied to the 200 Phytoplankton species provided by Deltares. For each species, we have generated:
 * NetCDF files containing the gridded fields
 * A JSON file with the analysis parameters and the validation score (negative log-likelihood)
 
-Preview figures in PNG format for the 5 time instances
+Preview figures in PNG format for the 5 time instances.
 
 ### Code
 
