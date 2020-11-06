@@ -36,7 +36,7 @@ This directory provides the code for the reading of data files and performing sp
 ```
 
 * **analysis** - Jupyter notebooks used to perform the data analysis, create the figures and the `netCDF` files.
-* **data** - contains a text file with the URLs of the datafiles.
+* **data** - contains a text file with the URLs of the data files.
 * **docs** - Rendered reports
 * **product** - Output product files: `netCDF` containing the gridded, probability fields and the corresponding figures in `PNG` format.
 * **scripts** - Reusable code: functions employed in the Jupyter notebooks.
@@ -44,7 +44,7 @@ This directory provides the code for the reading of data files and performing sp
 ## Data
 
 Data files have been produced by Deltares (Luuk van der Heijden, Willem Stolte).
-They consist of `CSV` files containing the dates, coordinates and occurences (presence of absence) of 200 species in the North Sea.
+They consist of `CSV` files containing the dates, coordinates and occurrences (presence of absence) of 200 species in the North Sea.
 The content of a data file looks like this (example for `Gymnodinium-1995-2020.csv`):
 ```bash
 "abbr","date_year","genus","date_xUTM_yUTM","date","xUTM","yUTM","season","eventID","wint_year","occurs","gridnr","middleXgrid","middleYgrid"
@@ -53,6 +53,9 @@ The content of a data file looks like this (example for `Gymnodinium-1995-2020.c
 "dome-phytoplankton",2010,"Gymnodinium","2010-01-11_563052.641129395_5744324.75671705",2010-01-11,563052.641129395,5744324.75671705,"winter",NA,NA,0,174,562500,5737500
 "dome-phytoplankton",2010,"Gymnodinium","2010-01-11_742467.610873757_5940711.86346217",2010-01-11,742467.610873757,5940711.86346217,"winter",NA,NA,0,648,742500,5947500
 ```
+
+The absence/presence CSV files should be placed in the directory `data/raw_data/CSV` (e.g. `data/raw_data/CSV/Gymnodinium-1995-2020.csv`). The data will be split automatically by the script `scripts/emodnet_bio2020.jl` into training data and validation data.
+
 
 ## Analysis
 
@@ -67,13 +70,13 @@ This directory contains the notebooks for the preparation and analysis of the da
 * `plot_validationscore_L.ipynb`
 
 
-The environment variable `DATADIR` should contain the path where the results should be written to.
+The results will be written to the directory `product`. The output path can be overwritten by setting the environment variable `DATADIR`.
 
 
 
 ### Neural network reconstruction
 
-We applied a neural network technique that allows us to use other relevant co-variables to improve the gridded fields. The principle is to maximise the likelihood of a field given the training data. The environment variables considered in this exercise are:
+We applied a neural network technique that allows us to use other relevant co-variables to improve the gridded fields. The principle is to maximize the likelihood of a field given the training data. The environment variables considered in this exercise are:
 * bathymetry (from GEBCO),
 * silicate (from EMODnet Chemistry)
 * phosphate (from EMODnet Chemistry)
@@ -132,3 +135,20 @@ The DIVAnd Neural Network has been prepared for Binder, including the declaratio
 Please cite this product as:
 *A. Barth, Willem Stolte, C. Troupin & Luuk van der Heijden (2020). Probability maps
 for different phytoplankton species in the North Sea.*
+
+<!--  LocalWords:  EMODnet Phytoplankton Variational DIVAnd gridded
+ -->
+<!--  LocalWords:  datasets et al dataset Biddulphia sinensis Heatmap
+ -->
+<!--  LocalWords:  netCDF Jupyter PNG Deltares Luuk der Heijden CSV
+ -->
+<!--  LocalWords:  Willem Stolte Gymnodinium csv xUTM yUTM eventID jl
+ -->
+<!--  LocalWords:  wint gridnr middleXgrid middleYgrid phytoplankton
+ -->
+<!--  LocalWords:  heatmap testcase ipynb heatmaps interp DATADIR ulg
+ -->
+<!--  LocalWords:  validationscore bathymetry GEBCO Knet JSON toml
+ -->
+<!--  LocalWords:  else's jupyter gher Troupin
+ -->

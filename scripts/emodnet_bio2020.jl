@@ -117,8 +117,8 @@ if ndimensions == 3
 end
 DIVAndNN.normalize!(mask,field)
 
-csvdir = joinpath(datadir,"CSV")
-csvsplitdir = joinpath(datadir,"CSV-split")
+csvdir = joinpath(datadir,"..","data","raw_data","CSV")
+csvsplitdir = joinpath(datadir,"..","data","raw_data","CSV-split")
 
 validation_fraction = 0.2
 
