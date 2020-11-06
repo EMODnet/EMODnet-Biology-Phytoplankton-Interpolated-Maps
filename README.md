@@ -54,7 +54,7 @@ The content of a data file looks like this (example for `Gymnodinium-1995-2020.c
 "dome-phytoplankton",2010,"Gymnodinium","2010-01-11_742467.610873757_5940711.86346217",2010-01-11,742467.610873757,5940711.86346217,"winter",NA,NA,0,648,742500,5947500
 ```
 
-The absence/presence CSV files should be placed in the directory `data/raw_data/CSV` (e.g. `data/raw_data/CSV/Gymnodinium-1995-2020.csv`). The data will be split automatically by the script `scripts/emodnet_bio2020.jl` into training data and validation data.
+The absence/presence CSV files from https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Greater-NorthSea should be placed in the directory `data/raw_data/CSV` (e.g. `data/raw_data/CSV/Gymnodinium-1995-2020.csv`). The data will be split automatically by the script `scripts/emodnet_bio2020.jl` into training data and validation data.
 
 
 ## Analysis
