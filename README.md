@@ -133,8 +133,7 @@ The DIVAnd Neural Network has been prepared for Binder, including the declaratio
 ## Citation
 
 Please cite this product as:
-*A. Barth, Willem Stolte, C. Troupin & Luuk van der Heijden (2020). Probability maps
-for different phytoplankton species in the North Sea.*
+*A. Barth, Willem Stolte, C. Troupin & Luuk van der Heijden (2020). Probability maps for different phytoplankton species in the North Sea. Integrated data products created under the European Marine Observation Data Network (EMODnet) Biology project (EASME/EMFF/2017/1.3.1.2/02/SI2.789013), funded by the by the European Union under Regulation (EU) No 508/2014 of the European Parliament and of the Council of 15 May 2014 on the European Maritime and Fisheries Fund*
 
 <!--  LocalWords:  EMODnet Phytoplankton Variational DIVAnd gridded
  -->
