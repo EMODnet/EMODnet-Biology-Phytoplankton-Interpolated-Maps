@@ -119,7 +119,7 @@ function plotanalysis(fname)
         subplot(2,2,3);
         obsplot(mv_cv,"(c) Validation data",cl_prop)
 
-        figname = replace(fname,".nc" => "_n$(n).png")
+        figname = replace(replace(fname,"netCDF" => "figures"),".nc" => "_n$(n).png")
         savefig(figname)
     end
 end

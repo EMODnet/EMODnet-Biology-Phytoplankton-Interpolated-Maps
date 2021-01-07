@@ -14,7 +14,7 @@ ndimensions = 2
 ndimensions = 3
 
 
-datadir = get(ENV,"DATADIR",expanduser("~/tmp/Emodnet-Bio2020-GreaterNorthSea"))
+datadir = get(ENV,"DATADIR",joinpath(@__DIR__,"..","product"))
 
 # Serge Scory, Charles Troupin (2019). SeaDataCloud North Sea Temperature and Salinity Climatology V1.
 # https://doi.org/10.12770/6c9e755f-14a3-48be-95d5-944441f62b5f
