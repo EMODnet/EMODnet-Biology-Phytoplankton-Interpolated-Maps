@@ -167,13 +167,13 @@ function create_nc_results(filename::String, lons, lats, field,
         nclon = defVar(ds,"lon", Float32, ("lon",))
         nclon.attrib["missing_value"] = Float32(valex)
         nclon.attrib["_FillValue"] = Float32(valex)
-        nclon.attrib["units"] = "degrees East"
+        nclon.attrib["units"] = "degree_east"
         nclon.attrib["lon"] = "longitude"
 
         nclat = defVar(ds,"lat", Float32, ("lat",))
         nclat.attrib["missing_value"] = Float32(valex)
         nclat.attrib["_FillValue"] = Float32(valex)
-        nclat.attrib["units"] = "degrees North"
+        nclat.attrib["units"] = "degree_north"
         nclat.attrib["lat"] = "latitude"
 
         # Global attributes
