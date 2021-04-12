@@ -134,7 +134,7 @@ Preview figures in PNG format for the 5 time instances.
 ### Code
 
 The code, written in Julia, is distributed through GitHub:
-https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps
+https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps .
 The scripts directory contains the functions defined for the data processing.
 The analysis directory stores different jupyter-notebooks describing the different analysis steps.
 The package [gher-ulg/DIVAndNN.jl](https://github.com/gher-ulg/DIVAndNN.jl) is generic and not specific to the phytoplankton data in the North Sea. All code specific to this test case has been added to the repository [https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps](EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps).
