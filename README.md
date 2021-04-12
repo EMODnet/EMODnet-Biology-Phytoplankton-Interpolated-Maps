@@ -60,7 +60,7 @@ The absence/presence CSV files from https://github.com/EMODnet/EMODnet-Biology-P
 ## Installation
 
 The code uses Julia 1.5 (available from https://julialang.org/downloads/). The necessary julia packages to run the analysis `emodnet_bio2020.jl`
-can be installed by using the following in a julia session:
+can be installed by using the following commands in a julia session:
 
 ``` julia
 using Pkg
