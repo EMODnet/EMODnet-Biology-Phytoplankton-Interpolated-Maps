@@ -57,6 +57,21 @@ The content of a data file looks like this (example for `Gymnodinium-1995-2020.c
 The absence/presence CSV files from https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Greater-NorthSea should be placed in the directory `data/raw_data/CSV` (e.g. `data/raw_data/CSV/Gymnodinium-1995-2020.csv`). The data will be split automatically by the script `scripts/emodnet_bio2020.jl` into training data and validation data.
 
 
+## Installation
+
+The code uses Julia 1.5 (available from https://julialang.org/downloads/). The necessary julia packages to run the analysis `emodnet_bio2020.jl`
+can be installed by using the following in a julia session:
+
+``` julia
+using Pkg
+cd("/full/path/to/local/repository")
+Pkg.activate(".")
+Pkg.instantiate()
+```
+
+where `/full/path/to/local/repository` is the file path containing the source code of this repository and in particular the files
+`Manifest.toml` and `Project.toml`. More information about Julia environements is availabe [here](https://pkgdocs.julialang.org/v1/environments/).
+
 ## Analysis
 
 This directory contains the notebooks for the preparation and analysis of the data.
@@ -71,7 +86,6 @@ This directory contains the notebooks for the preparation and analysis of the da
 
 
 The results will be written to the directory `product`. The output path can be overwritten by setting the environment variable `DATADIR`.
-
 
 
 ### Neural network reconstruction
@@ -121,11 +135,8 @@ Preview figures in PNG format for the 5 time instances.
 
 The code, written in Julia, is distributed through GitHub:
 https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps
-The file named Projects.toml contains a list of the necessary packages used to make data products. More information is available https://julialang.github.io/Pkg.jl/v1/toml-files/ and https://julialang.github.io/Pkg.jl/v1.5/environments/#Using-someone-else's-project-1 .
 The scripts directory contains the functions defined for the data processing.
 The analysis directory stores different jupyter-notebooks describing the different analysis steps.
-
-
 The package [gher-ulg/DIVAndNN.jl](https://github.com/gher-ulg/DIVAndNN.jl) is generic and not specific to the phytoplankton data in the North Sea. All code specific to this test case has been added to the repository [https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps](EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps).
 The DIVAnd Neural Network has been prepared for Binder, including the declaration of all software and data dependencies. In Binder, only 2 GB of RAM are available per user which is insufficient to run this code.
 
