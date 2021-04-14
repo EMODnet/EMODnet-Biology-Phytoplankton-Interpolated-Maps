@@ -1,5 +1,7 @@
-# Product netCDF
-product/*.nc
+# Product files
+product/*/*.nc
+product/*/*.png
+product/*/*.json
 
 .ipynb_checkpoints/
 
