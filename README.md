@@ -41,11 +41,12 @@ This directory provides the code for the reading of data files and performing sp
 * **product** - Output product files: `netCDF` containing the gridded, probability fields and the corresponding figures in `PNG` format.
 * **scripts** - Reusable code: functions employed in the Jupyter notebooks.
 
-## Data
+## Data series
 
-Data files have been produced by Deltares (Luuk van der Heijden, Willem Stolte).
+Data files have been produced by Deltares ([Stolte, W. and van der Heijden, L. 2020](https://www.emodnet-biology.eu/data-catalog?module=dataset&dasid=6587)).
 They consist of `CSV` files containing the dates, coordinates and occurrences (presence of absence) of 200 species in the North Sea.
 The content of a data file looks like this (example for `Gymnodinium-1995-2020.csv`):
+
 ```bash
 "abbr","date_year","genus","date_xUTM_yUTM","date","xUTM","yUTM","season","eventID","wint_year","occurs","gridnr","middleXgrid","middleYgrid"
 "dome-phytoplankton",2010,"Gymnodinium","2010-01-11_477850.085718031_5756212.06783869",2010-01-11,477850.085718031,5756212.06783869,"winter",NA,NA,0,201,472500,5752500
@@ -72,7 +73,7 @@ Pkg.instantiate()
 where `/full/path/to/local/repository` is the file path containing the source code of this repository and in particular the files
 `Manifest.toml` and `Project.toml`. More information about Julia environements is availabe [here](https://pkgdocs.julialang.org/v1/environments/).
 
-## Analysis
+## Data product
 
 This directory contains the notebooks for the preparation and analysis of the data.
 
@@ -131,7 +132,15 @@ The procedure described in the previous sections has been applied to the 200 Phy
 
 Preview figures in PNG format for the 5 time instances.
 
-### Code
+## More information
+### References
+
+Barth, A., Beckers, J.-M., Troupin, C., Alvera-Azcárate, A., and Vandenbulcke, L.(2014): divand-1.0: *n*-dimensional variational data analysis for ocean observations, Geosci. Model Dev.,  7, 225–241, https://doi.org/10.5194/gmd-7-225-2014.    
+
+Stolte, W., and van der Heijden, Luuk. (2020). Presence/Absence maps of phytoplankton in the Greater North Sea. Integrated data products  created under the European Marine Observation Data Network (EMODnet)  Biology project (EASME/EMFF/2017/1.3.1.2/02/SI2.789013), funded by the  by the European Union under Regulation (EU) No 508/2014 of the European  Parliament and of the Council of 15 May 2014 on the European Maritime  and Fisheries Fund. https://www.emodnet-biology.eu/data-catalog?module=dataset&dasid=6587
+
+
+### Code and methodology
 
 The code, written in Julia, is distributed through GitHub:
 https://github.com/EMODnet/EMODnet-Biology-Phytoplankton-Interpolated-Maps .
@@ -141,13 +150,18 @@ The package [gher-ulg/DIVAndNN.jl](https://github.com/gher-ulg/DIVAndNN.jl) is g
 The DIVAnd Neural Network has been prepared for Binder, including the declaration of all software and data dependencies. In Binder, only 2 GB of RAM are available per user which is insufficient to run this code.
 
 
-## Citation
+### Citation and download link
 
 Please cite this product as:
 
 *A. Barth, Willem Stolte, C. Troupin & Luuk van der Heijden (2020). Probability maps for different phytoplankton species in the North Sea. Integrated data products created under the European Marine Observation Data Network (EMODnet) Biology project (EASME/EMFF/2017/1.3.1.2/02/SI2.789013), funded by the by the European Union under Regulation (EU) No 508/2014 of the European Parliament and of the Council of 15 May 2014 on the European Maritime and Fisheries Fund*
 
 The code is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+The product is available to download at: https://www.emodnet-biology.eu/data-catalog?module=dataset&dasid=6588
+
+### Authors
+[A. Barth](https://www.emodnet-biology.eu/data-catalog?module=person&persid=5344), [W. Stolte](https://www.emodnet-biology.eu/data-catalog?module=person&persid=29132), [C. Troupin](https://www.emodnet-biology.eu/data-catalog?module=person&persid=19092) and [Luuk van der Heijden](https://www.emodnet-biology.eu/data-catalog?module=person&persid=39499).
 
 <!--  LocalWords:  EMODnet Phytoplankton Variational DIVAnd gridded
  -->
